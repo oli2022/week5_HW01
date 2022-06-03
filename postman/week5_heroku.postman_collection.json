@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "5b2ea6cd-a62a-4a02-8f63-fc5ab56f1077",
+		"name": "week5_heroku",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20102154"
+	},
+	"item": [
+		{
+			"name": "https://week5-01.herokuapp.com/posts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://week5-01.herokuapp.com/posts",
+					"protocol": "https",
+					"host": [
+						"week5-01",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://week5-01.herokuapp.com/post",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"user\":\"62999533d3bc74649e1fee0\",\n    \"content\": \"newPost-04\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://week5-01.herokuapp.com/post",
+					"protocol": "https",
+					"host": [
+						"week5-01",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"post"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://week5-01.herokuapp.com/post/629994b8686213233dcadb89",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://week5-01.herokuapp.com/post/629994b8686213233dcadb89",
+					"protocol": "https",
+					"host": [
+						"week5-01",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"post",
+						"629994b8686213233dcadb89"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://week5-01.herokuapp.com/post/62999628686213233dcadb9",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"content\": \"updata-01\",\n        \"image\": \"\",\n        \"likes\": 0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://week5-01.herokuapp.com/post/62999628686213233dcadb9",
+					"protocol": "https",
+					"host": [
+						"week5-01",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"post",
+						"62999628686213233dcadb9"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "https://week5-01.herokuapp.com/posts",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://week5-01.herokuapp.com/posts",
+					"protocol": "https",
+					"host": [
+						"week5-01",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"posts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
