@@ -3,7 +3,9 @@ const express = require('express');
 const router = express.Router();
 
 // 引用其他檔案 - 錯誤訊息
-const { errorHandle, deleteError, deleteAllError, nullError } = require('../servers/errorHandle');
+//const { errorHandle, deleteError, deleteAllError, nullError } = require('../servers/errorHandle');
+const appError = require('../servers/appError');
+const handleErrorAsync = require('../servers/handleErrorAsync');
 
 // 引用 Model 檔案
 const Post = require('../Models/postModel');
@@ -31,55 +33,101 @@ const postsController = {
         // });
         res.status(200).json(post);
     },
-    createPost: async (req, res) => {
-        try {
-            const newPost = await Post.create(req.body);
+
+    createPost: handleErrorAsync(async function (req, res, next) {
+        if (req.body.content == undefined) {
+            return next(appError(400, ' content 欄位為必填', next));
+        }
+        const newPost = await Post.create(req.body);
+        res.status(200).json({
+            status: '單筆資料新增成功',
+            post: newPost,
+        });
+    }),
+    // createPost: async (req, res) => {
+    //     try {
+    //         const newPost = await Post.create(req.body);
+    //         res.status(200).json({
+    //             post: newPost,
+    //             status: ' 單筆資料新增成功 ',
+    //         });
+    //     } catch (error) {
+    //         nullError(res, error);
+    //     }
+    // },
+
+    deleteAll: handleErrorAsync(async function (req, res, next) {
+        if (req.originalUrl === '/posts') {
+            await Post.deleteMany({});
             res.status(200).json({
-                post: newPost,
-                status: ' 單筆資料新增成功 ',
+                status: '刪除全部資料成功',
             });
-        } catch (error) {
-            nullError(res, error);
+        } else {
+            return next(appError(500, '路徑錯誤', next));
         }
-    },
-    deleteAll: async (req, res) => {
-        try {
-            if (req.originalUrl === '/posts') {
-                await Post.deleteMany({});
-                res.status(200).json({
-                    status: '刪除全部資料成功',
-                });
-            } else {
-                deleteAllError(res, error);
-            }
-        } catch (error) {
-            deleteAllError(res, error);
+    }),
+    // deleteAll: async (req, res) => {
+    //     try {
+    //         if (req.originalUrl === '/posts') {
+    //             await Post.deleteMany({});
+    //             res.status(200).json({
+    //                 status: '刪除全部資料成功',
+    //             });
+    //         } else {
+    //             deleteAllError(res, error);
+    //         }
+    //     } catch (error) {
+    //         deleteAllError(res, error);
+    //     }
+    // },
+    deleteOne: handleErrorAsync(async function (req, res, next) {
+        const id = req.params.id;
+        const isDelete = await Post.findByIdAndDelete(id);
+        if (!isDelete) {
+            return next(appError(400, '刪除失敗, id 不正確'));
         }
-    },
-    deleteOne: async (req, res) => {
-        try {
-            const id = req.params.id;
-            await Post.findByIdAndDelete(id);
-            res.status(200).json({
-                status: ' 單筆資料刪除成功 ',
-            });
-        } catch (error) {
-            deleteError(res, error);
+        await Post.findByIdAndDelete(id);
+        res.status(200).json({
+            status: ' 單筆資料刪除成功 ',
+        });
+    }),
+    // deleteOne: async (req, res, next) => {
+    //     try {
+    //         const id = req.params.id;
+    //         await Post.findByIdAndDelete(id);
+    //         res.status(200).json({
+    //             status: ' 單筆資料刪除成功 ',
+    //         });
+    //     } catch (error) {
+    //         deleteError(res, error);
+    //     }
+    // },
+
+    updatePost: handleErrorAsync(async function (req, res, next) {
+        const id = req.params.id;
+        const data = req.body;
+        await Post.findByIdAndUpdate(id, data);
+        if (!id) {
+            return next(appError(500, '無此 id', next));
         }
-    },
-    updatePost: async (req, res) => {
-        try {
-            const id = req.params.id;
-            const data = req.body;
-            await Post.findByIdAndUpdate(id, data);
-            res.status(200).json({
-                status: ' 單筆資料更新成功 ',
-                data,
-            });
-        } catch (error) {
-            deleteError(res, error);
-        }
-    },
+        res.status(200).json({
+            status: ' 單筆資料更新成功 ',
+            data,
+        });
+    }),
+    // updatePost: async (req, res) => {
+    //     try {
+    //         const id = req.params.id;
+    //         const data = req.body;
+    //         await Post.findByIdAndUpdate(id, data);
+    //         res.status(200).json({
+    //             status: ' 單筆資料更新成功 ',
+    //             data,
+    //         });
+    //     } catch (error) {
+    //         deleteError(res, error);
+    //     }
+    // },
 };
 
 module.exports = postsController;
